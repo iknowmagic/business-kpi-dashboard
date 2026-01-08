@@ -64,7 +64,8 @@ export function TrafficChart({ data, isLoading }: TrafficChartProps) {
               borderRadius: '8px',
               color: isDark ? 'hsl(213, 31%, 91%)' : 'hsl(222, 47%, 11%)',
             }}
-            formatter={(value: number) => {
+            formatter={(value: number | undefined) => {
+              if (value === undefined) return ['', ''];
               const total = data.reduce((sum, item) => sum + item.value, 0);
               const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
               return [`${value} orders (${percentage}%)`, ''];

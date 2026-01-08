@@ -34,9 +34,9 @@ export function ThemeToggle() {
 
   return (
     <Button
-      variant="icon"
+      variant="ghost"
       size="sm"
-      className="md:size-base"
+      className="md:size-base rounded-full"
       onClick={toggleTheme}
       data-testid="theme-toggle"
       aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
