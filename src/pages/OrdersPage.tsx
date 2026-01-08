@@ -35,7 +35,7 @@ export default function OrdersPage() {
       <AppSidebar />
       <div className="flex flex-1 flex-col">
         <DashboardHeader title="Orders" orders={filteredOrders} showFilters={true} showExport={true} />
-        <main className="flex-1 overflow-auto space-y-4 p-4 md:space-y-6 md:p-6">
+        <main className="flex-1 space-y-4 overflow-auto p-4 md:space-y-6 md:p-6">
           <DrilldownIndicator />
           {filteredOrders.length === 0 ? <EmptyState /> : <OrdersTable orders={filteredOrders} />}
         </main>
