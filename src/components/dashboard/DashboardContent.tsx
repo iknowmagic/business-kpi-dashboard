@@ -23,11 +23,7 @@ export function DashboardContent() {
   const simulateError = useAtomValue(simulateErrorAtom);
 
   // Fetch data from API using TanStack Query
-  const {
-    data: dashboardData,
-    isLoading: isDataLoading,
-    error,
-  } = useQuery(dashboardQueryOptions(filters));
+  const { data: dashboardData, isLoading: isDataLoading, error } = useQuery(dashboardQueryOptions(filters));
 
   // Apply drilldown filtering
   const filteredOrders = useMemo(() => {
