@@ -9,12 +9,12 @@ import { EmptyState } from '@/components/dashboard/EmptyState';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { fetchDashboardData } from '@/lib/dashboardApi';
-import type { Order } from '@/lib/mockData';
+import { dashboardQueryOptions } from '@/lib/dashboardApi';
 import { filtersAtom } from '@/store/dashboard/atoms';
+import { useQuery } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
 import { Search } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 interface CustomerData {
   name: string;
@@ -27,31 +27,11 @@ interface CustomerData {
 export default function CustomersPage() {
   const filters = useAtomValue(filtersAtom);
   const [searchQuery, setSearchQuery] = useState('');
-  const [orders, setOrders] = useState<Order[]>([]);
 
-  useEffect(() => {
-    let isMounted = true;
-
-    async function loadData() {
-      try {
-        const data = await fetchDashboardData(filters);
-        if (isMounted) {
-          setOrders(data.orders);
-        }
-      } catch (_err) {
-        if (isMounted) {
-          setOrders([]);
-        }
-      }
-    }
-
-    loadData();
-    return () => {
-      isMounted = false;
-    };
-  }, [filters]);
+  const { data } = useQuery(dashboardQueryOptions(filters));
 
   const customersData = useMemo(() => {
+    const orders = data?.orders ?? [];
     const customerMap = new Map<string, CustomerData>();
 
     orders
@@ -73,7 +53,7 @@ export default function CustomersPage() {
       });
 
     return Array.from(customerMap.values()).sort((a, b) => b.totalSpent - a.totalSpent);
-  }, [orders]);
+  }, [data?.orders]);
 
   const filteredCustomers = useMemo(() => {
     if (!searchQuery.trim()) return customersData;

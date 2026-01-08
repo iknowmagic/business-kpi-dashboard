@@ -3,6 +3,8 @@
  * Returns aggregated dashboard data based on filters
  */
 
+import type { VercelRequest, VercelResponse } from '@vercel/node';
+
 // Seeded random number generator for deterministic output
 class SeededRandom {
   private seed: number;
@@ -188,32 +190,17 @@ function aggregateChartData(orders: Order[]) {
   return { revenueOverTime, ordersByCategory: categoryData, trafficSources };
 }
 
-export default function handler(req: Request): Response {
-  // Handle CORS preflight
-  if (req.method === 'OPTIONS') {
-    return new Response(null, {
-      status: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type',
-      },
-    });
-  }
+export default function handler(req: VercelRequest, res: VercelResponse) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  if (req.method !== 'GET') {
-    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
-      status: 405,
-      headers: { 'Content-Type': 'application/json' },
-    });
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
   }
 
   try {
-    // Parse query parameters from URL
-    const url = new URL(req.url);
-    const dateRange = url.searchParams.get('dateRange') || 'Last 30 days';
-    const segment = url.searchParams.get('segment') || 'All';
-    const region = url.searchParams.get('region') || 'All';
+    const { dateRange = 'Last 30 days', segment = 'All', region = 'All' } = req.query;
 
     const filters: DashboardFilters = {
       dateRange: dateRange as DashboardFilters['dateRange'],
@@ -243,31 +230,18 @@ export default function handler(req: Request): Response {
     const chartData = aggregateChartData(currentOrders);
 
     // Return complete dashboard data
-    return new Response(
-      JSON.stringify({
-        kpis,
-        revenueOverTime: chartData.revenueOverTime,
-        ordersByCategory: chartData.ordersByCategory,
-        trafficSources: chartData.trafficSources,
-        orders: currentOrders.map((order) => ({
-          ...order,
-          date: order.date.toISOString(),
-        })),
-      }),
-      {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-        },
-      }
-    );
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Dashboard API error:', error);
-    return new Response(JSON.stringify({ error: 'Internal server error' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
+    return res.status(200).json({
+      kpis,
+      revenueOverTime: chartData.revenueOverTime,
+      ordersByCategory: chartData.ordersByCategory,
+      trafficSources: chartData.trafficSources,
+      orders: currentOrders.map((order) => ({
+        ...order,
+        date: order.date.toISOString(),
+      })),
     });
+  } catch (error) {
+    console.error('Dashboard API error:', error);
+    return res.status(500).json({ error: 'Internal server error' });
   }
 }

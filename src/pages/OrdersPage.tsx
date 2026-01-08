@@ -8,46 +8,20 @@ import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 import { DrilldownIndicator } from '@/components/dashboard/DrilldownIndicator';
 import { EmptyState } from '@/components/dashboard/EmptyState';
 import { OrdersTable } from '@/components/dashboard/OrdersTable';
-import { fetchDashboardData } from '@/lib/dashboardApi';
-import type { Order } from '@/lib/mockData';
+import { dashboardQueryOptions } from '@/lib/dashboardApi';
 import { drilldownAtom, filtersAtom } from '@/store/dashboard/atoms';
+import { useQuery } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 export default function OrdersPage() {
   const filters = useAtomValue(filtersAtom);
   const drilldown = useAtomValue(drilldownAtom);
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    let isMounted = true;
-
-    async function loadData() {
-      setIsLoading(true);
-      try {
-        const data = await fetchDashboardData(filters);
-        if (isMounted) {
-          setOrders(data.orders);
-        }
-      } catch (_err) {
-        if (isMounted) {
-          setOrders([]);
-        }
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      }
-    }
-
-    loadData();
-    return () => {
-      isMounted = false;
-    };
-  }, [filters]);
+  const { data, isLoading } = useQuery(dashboardQueryOptions(filters));
 
   const filteredOrders = useMemo(() => {
+    const orders = data?.orders ?? [];
     let filtered = orders;
 
     if (drilldown.type === 'day' && drilldown.value) {
@@ -57,7 +31,7 @@ export default function OrdersPage() {
     }
 
     return filtered;
-  }, [orders, drilldown]);
+  }, [data?.orders, drilldown]);
 
   return (
     <div className="bg-background flex min-h-screen flex-col md:flex-row">
