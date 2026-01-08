@@ -1,6 +1,12 @@
 # Changelog
 
 ## 2026-01-08
+- Feature: Theme toggle button
+  - Created ThemeToggle component with Sun/Moon icons from lucide-react
+  - Leverages existing next-themes infrastructure (ThemeProvider already set up)
+  - Positioned to the left of "Export CSV" button in DashboardHeader
+  - Supports light/dark mode switching with accessible labels
+  - Prevents hydration mismatch with mounted state check
 - Fix: API query decoding for filters
   - Decode `+` to space and apply `decodeURIComponent` for `dateRange`, `segment`, and `region` in api/dashboard.ts
   - Validate incoming values against allowed sets with safe fallbacks

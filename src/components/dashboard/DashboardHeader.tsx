@@ -6,6 +6,7 @@
 import type { Order } from '@/lib/mockData';
 import { exportOrdersToCSV } from '@/lib/mockData';
 import { Download } from 'lucide-react';
+import { ThemeToggle } from '../ThemeToggle';
 import { Button } from '../ui/button';
 import { DashboardFilters } from './DashboardFilters';
 
@@ -25,13 +26,16 @@ export function DashboardHeader({ title, orders = [], showFilters = true, showEx
     <div className="bg-card border-b px-4 py-3 md:px-6 md:py-4" data-testid="dashboard-header">
       <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <h2 className="text-xl font-bold md:text-2xl">{title}</h2>
-        {showExport && (
-          <Button onClick={handleExport} size="sm" className="md:size-base" data-testid="export-csv">
-            <Download className="mr-2 h-4 w-4" />
-            <span className="hidden sm:inline">Export CSV</span>
-            <span className="sm:hidden">Export</span>
-          </Button>
-        )}
+        <div className="flex gap-2">
+          {showExport && (
+            <Button onClick={handleExport} size="sm" className="md:size-base" data-testid="export-csv">
+              <Download className="mr-2 h-4 w-4" />
+              <span className="hidden sm:inline">Export CSV</span>
+              <span className="sm:hidden">Export</span>
+            </Button>
+          )}
+          <ThemeToggle />
+        </div>
       </div>
       {showFilters && <DashboardFilters />}
     </div>
