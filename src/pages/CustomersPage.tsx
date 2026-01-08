@@ -7,6 +7,7 @@ import { AppSidebar } from '@/components/dashboard/AppSidebar';
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 import { EmptyState } from '@/components/dashboard/EmptyState';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -14,8 +15,8 @@ import { dashboardQueryOptions } from '@/lib/dashboardApi';
 import { filtersAtom } from '@/store/dashboard/atoms';
 import { useQuery } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
-import { Search } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { ArrowDown, ArrowUp, Search } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
 
 interface CustomerData {
   name: string;
@@ -25,11 +26,28 @@ interface CustomerData {
   region: string;
 }
 
+const ITEMS_PER_PAGE = 10;
+
+type SortField = 'name' | 'totalOrders' | 'totalSpent' | 'region';
+
 export default function CustomersPage() {
   const filters = useAtomValue(filtersAtom);
   const [searchQuery, setSearchQuery] = useState('');
+  const [sortField, setSortField] = useState<SortField>('totalSpent');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+  const [currentPage, setCurrentPage] = useState(1);
 
   const { data, isLoading } = useQuery(dashboardQueryOptions(filters));
+
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('desc');
+    }
+    setCurrentPage(1);
+  };
 
   const customersData = useMemo(() => {
     const orders = data?.orders ?? [];
@@ -53,14 +71,51 @@ export default function CustomersPage() {
         }
       });
 
-    return Array.from(customerMap.values()).sort((a, b) => b.totalSpent - a.totalSpent);
+    return Array.from(customerMap.values());
   }, [data?.orders]);
 
-  const filteredCustomers = useMemo(() => {
-    if (!searchQuery.trim()) return customersData;
-    const query = searchQuery.toLowerCase();
-    return customersData.filter((customer) => customer.name.toLowerCase().includes(query));
-  }, [customersData, searchQuery]);
+  const filteredAndSorted = useMemo(() => {
+    let result = [...customersData];
+
+    // Search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter((customer) => customer.name.toLowerCase().includes(query));
+    }
+
+    // Sort
+    result.sort((a, b) => {
+      let comparison = 0;
+      switch (sortField) {
+        case 'name':
+          comparison = a.name.localeCompare(b.name);
+          break;
+        case 'totalOrders':
+          comparison = a.totalOrders - b.totalOrders;
+          break;
+        case 'totalSpent':
+          comparison = a.totalSpent - b.totalSpent;
+          break;
+        case 'region':
+          comparison = a.region.localeCompare(b.region);
+          break;
+      }
+      return sortDirection === 'asc' ? comparison : -comparison;
+    });
+
+    return result;
+  }, [customersData, searchQuery, sortField, sortDirection]);
+
+  const totalPages = Math.ceil(filteredAndSorted.length / ITEMS_PER_PAGE);
+  const paginatedCustomers = filteredAndSorted.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  // Reset to page 1 when search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
 
   return (
     <div className="bg-background flex min-h-screen flex-col md:flex-row">
@@ -95,37 +150,127 @@ export default function CustomersPage() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Customer Name</TableHead>
-                      <TableHead>Total Orders</TableHead>
-                      <TableHead>Total Spent</TableHead>
+                      <TableHead
+                        className="cursor-pointer select-none hover:bg-muted/50"
+                        onClick={() => handleSort('name')}
+                      >
+                        <div className="flex items-center gap-1">
+                          Customer Name
+                          {sortField === 'name' &&
+                            (sortDirection === 'asc' ? (
+                              <ArrowUp className="h-4 w-4" />
+                            ) : (
+                              <ArrowDown className="h-4 w-4" />
+                            ))}
+                        </div>
+                      </TableHead>
+                      <TableHead
+                        className="cursor-pointer select-none hover:bg-muted/50"
+                        onClick={() => handleSort('totalOrders')}
+                      >
+                        <div className="flex items-center gap-1">
+                          Total Orders
+                          {sortField === 'totalOrders' &&
+                            (sortDirection === 'asc' ? (
+                              <ArrowUp className="h-4 w-4" />
+                            ) : (
+                              <ArrowDown className="h-4 w-4" />
+                            ))}
+                        </div>
+                      </TableHead>
+                      <TableHead
+                        className="cursor-pointer select-none hover:bg-muted/50"
+                        onClick={() => handleSort('totalSpent')}
+                      >
+                        <div className="flex items-center gap-1">
+                          Total Spent
+                          {sortField === 'totalSpent' &&
+                            (sortDirection === 'asc' ? (
+                              <ArrowUp className="h-4 w-4" />
+                            ) : (
+                              <ArrowDown className="h-4 w-4" />
+                            ))}
+                        </div>
+                      </TableHead>
                       <TableHead>Type</TableHead>
-                      <TableHead>Region</TableHead>
+                      <TableHead
+                        className="cursor-pointer select-none hover:bg-muted/50"
+                        onClick={() => handleSort('region')}
+                      >
+                        <div className="flex items-center gap-1">
+                          Region
+                          {sortField === 'region' &&
+                            (sortDirection === 'asc' ? (
+                              <ArrowUp className="h-4 w-4" />
+                            ) : (
+                              <ArrowDown className="h-4 w-4" />
+                            ))}
+                        </div>
+                      </TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {filteredCustomers.length === 0 ? (
+                    {paginatedCustomers.length === 0 ? (
                       <TableRow>
                         <TableCell colSpan={5} className="text-muted-foreground py-8 text-center">
                           No customers found
                         </TableCell>
                       </TableRow>
                     ) : (
-                      filteredCustomers.map((customer) => (
-                        <TableRow key={customer.name} data-testid="customer-row">
-                          <TableCell className="font-medium">{customer.name}</TableCell>
-                          <TableCell>{customer.totalOrders}</TableCell>
-                          <TableCell>${customer.totalSpent.toFixed(2)}</TableCell>
-                          <TableCell>
-                            <Badge variant={customer.isReturning ? 'default' : 'secondary'}>
-                              {customer.isReturning ? 'Returning' : 'New'}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>{customer.region}</TableCell>
-                        </TableRow>
-                      ))
+                      paginatedCustomers.map((customer) => {
+                        const formatNumber = (num: number): string => {
+                          if (num >= 1000000) return '$' + (num / 1000000).toFixed(1) + 'M';
+                          if (num >= 1000) return '$' + (num / 1000).toFixed(1) + 'K';
+                          return '$' + num.toFixed(0);
+                        };
+
+                        return (
+                          <TableRow key={customer.name} data-testid="customer-row">
+                            <TableCell className="font-medium">{customer.name}</TableCell>
+                            <TableCell>{customer.totalOrders}</TableCell>
+                            <TableCell>{formatNumber(customer.totalSpent)}</TableCell>
+                            <TableCell>
+                              <Badge variant={customer.isReturning ? 'default' : 'secondary'}>
+                                {customer.isReturning ? 'Returning' : 'New'}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>{customer.region}</TableCell>
+                          </TableRow>
+                        );
+                      })
                     )}
                   </TableBody>
                 </Table>
+              </div>
+
+              {/* Pagination */}
+              <div className="mt-4 flex items-center justify-between border-t pt-4">
+                <div className="text-sm text-muted-foreground">
+                  Showing {filteredAndSorted.length === 0 ? 0 : (currentPage - 1) * ITEMS_PER_PAGE + 1} to{' '}
+                  {Math.min(currentPage * ITEMS_PER_PAGE, filteredAndSorted.length)} of {filteredAndSorted.length}{' '}
+                  customers
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                  >
+                    Previous
+                  </Button>
+                  <div className="text-sm text-muted-foreground">
+                    Page {currentPage} of {totalPages || 1}
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                    disabled={currentPage === totalPages || totalPages === 0}
+                  >
+                    Next
+                  </Button>
+                </div>
               </div>
             </div>
           )}
