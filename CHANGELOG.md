@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-01-08
+- Fix: API query decoding for filters
+  - Decode `+` to space and apply `decodeURIComponent` for `dateRange`, `segment`, and `region` in api/dashboard.ts
+  - Validate incoming values against allowed sets with safe fallbacks
+  - Result: "New customers" filter now returns data (was empty due to string mismatch)
+- Tests: Added failing-first assertion
+  - backend-features.test.ts: assert at least one order exists for "New customers" within "Last 30 days"
+  - This test failed before the fix and passes after
+
 ## 2026-01-07
 - Added Business KPI Dashboard as a portfolio piece
   - Created mock data generator with deterministic seeding (500 orders over 90 days)

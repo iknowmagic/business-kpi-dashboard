@@ -86,6 +86,17 @@ describe('Dashboard API - Backend-Driven Features', () => {
       });
     });
 
+    it('returns at least one order for "New customers" in the last 30 days (expected to fail now)', async () => {
+      const params = new URLSearchParams({ dateRange: 'Last 30 days', segment: 'New customers', region: 'All' });
+      const res = await fetch(`${API_BASE_URL}/api/dashboard?${params.toString()}`);
+      expect(res.status).toBe(200);
+
+      const body = (await res.json()) as ApiResponse;
+      const orders = body.orders ?? [];
+      // This asserts backend actually serves new-customer data in 30-day window
+      expect(orders.length).toBeGreaterThan(0);
+    });
+
     it('provides data for "Returning customers" only', async () => {
       const params = new URLSearchParams({ dateRange: 'Last 90 days', segment: 'Returning customers', region: 'All' });
       const res = await fetch(`${API_BASE_URL}/api/dashboard?${params.toString()}`);
