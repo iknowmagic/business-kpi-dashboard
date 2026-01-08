@@ -1,10 +1,17 @@
 # Changelog
 
 ## 2026-01-08
+- Feature: Dark-theme friendly charts with pastel colors
+  - CategoryChart: Each category now has its own pastel color (blue, purple, green, orange) instead of all black bars
+  - RevenueChart: White dots in dark mode for better visibility, pastel purple line
+  - All charts: Improved axis text contrast (readable gray instead of washed out)
+  - All charts: Dark-theme friendly tooltips (dark background in dark mode, not white squares)
+  - All charts: Proper grid colors that adapt to theme
 - Feature: Theme toggle button
   - Created ThemeToggle component with Sun/Moon icons from lucide-react
   - Leverages existing next-themes infrastructure (ThemeProvider already set up)
-  - Positioned to the left of "Export CSV" button in DashboardHeader
+  - Positioned at far right of DashboardHeader (after "Export CSV" button)
+  - Rounded button showing current theme state with icon only
   - Supports light/dark mode switching with accessible labels
   - Prevents hydration mismatch with mounted state check
 - Fix: API query decoding for filters
