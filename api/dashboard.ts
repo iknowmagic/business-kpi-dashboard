@@ -93,6 +93,7 @@ function applyFilters(orders: Order[], filters: DashboardFilters): Order[] {
 
   // Date range filter
   const now = new Date();
+  now.setHours(23, 59, 59, 999); // End of today
   const daysMap = {
     'Last 7 days': 7,
     'Last 30 days': 30,
@@ -100,7 +101,13 @@ function applyFilters(orders: Order[], filters: DashboardFilters): Order[] {
   };
   const cutoffDate = new Date(now);
   cutoffDate.setDate(cutoffDate.getDate() - daysMap[filters.dateRange]);
-  filtered = filtered.filter((order) => order.date >= cutoffDate);
+  cutoffDate.setHours(0, 0, 0, 0); // Start of cutoff day
+
+  filtered = filtered.filter((order) => {
+    const orderDate = new Date(order.date);
+    orderDate.setHours(0, 0, 0, 0);
+    return orderDate >= cutoffDate && orderDate <= now;
+  });
 
   // Segment filter
   if (filters.segment === 'New customers') {
