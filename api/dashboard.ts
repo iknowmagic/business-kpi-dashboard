@@ -25,17 +25,19 @@ const REGIONS = new Set<DashboardFilters['region']>(['All', 'NA', 'EU', 'APAC'])
 
 const coerceDateRange = (v: unknown): DashboardFilters['dateRange'] => {
   const s = decodeParam(v);
-  return s && DATE_RANGES.has(s as any) ? (s as DashboardFilters['dateRange']) : 'Last 30 days';
+  return s && DATE_RANGES.has(s as DashboardFilters['dateRange'])
+    ? (s as DashboardFilters['dateRange'])
+    : 'Last 30 days';
 };
 
 const coerceSegment = (v: unknown): DashboardFilters['segment'] => {
   const s = decodeParam(v);
-  return s && SEGMENTS.has(s as any) ? (s as DashboardFilters['segment']) : 'All';
+  return s && SEGMENTS.has(s as DashboardFilters['segment']) ? (s as DashboardFilters['segment']) : 'All';
 };
 
 const coerceRegion = (v: unknown): DashboardFilters['region'] => {
   const s = decodeParam(v);
-  return s && REGIONS.has(s as any) ? (s as DashboardFilters['region']) : 'All';
+  return s && REGIONS.has(s as DashboardFilters['region']) ? (s as DashboardFilters['region']) : 'All';
 };
 
 export default function handler(req: VercelRequest, res: VercelResponse) {
