@@ -39,14 +39,17 @@ export function KPICard({ title, value, change, format, isLoading }: KPICardProp
   const Icon = isPositive ? ArrowUp : ArrowDown;
 
   return (
-    <div className="bg-card rounded-lg border p-6" data-testid="kpi-card">
+    <div className="bg-card @container rounded-lg border p-6" data-testid="kpi-card">
       <h3 className="text-muted-foreground mb-2 text-sm font-medium">{title}</h3>
-      <div className="mb-1 text-3xl font-bold" data-testid="kpi-value">
+      <div className="@kpi1:text-3xl mb-1 text-2xl font-bold" data-testid="kpi-value">
         {formattedValue}
       </div>
-      <div className="flex items-center gap-1 text-sm">
+      <div
+        className="@kpi1:text-sm flex items-center gap-1 text-xs whitespace-nowrap"
+        data-testid="kpi-change-container"
+      >
         <Icon className={`h-4 w-4 ${changeColor}`} />
-        <span className={changeColor} data-testid="kpi-change">
+        <span className={`${changeColor}`} data-testid="kpi-change">
           {Math.abs(change).toFixed(1)}%
         </span>
         <span className="text-muted-foreground">vs previous period</span>

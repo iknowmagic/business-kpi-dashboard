@@ -3,6 +3,14 @@
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
+:root {
+  font-size: 16px;
+}
+
+@theme {
+  --container-kpi1: 9rem;
+}
+
 /* ============================================================================
    LIGHT THEME COLOR PALETTE (consolidated)
    ============================================================================ */
