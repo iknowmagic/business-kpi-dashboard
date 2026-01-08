@@ -1,18 +1,11 @@
 import { PageTransition } from '@/components/PageTransition';
+import BusinessDashboard from '@/pages/BusinessDashboard';
 import ComponentsShowcasePage from '@/pages/ComponentsShowcase';
-import DashboardPage from '@/pages/Dashboard';
-import type { Session } from '@supabase/supabase-js';
-import { Outlet, createRootRoute, createRoute, createRouter } from '@tanstack/react-router';
+import CustomersPage from '@/pages/CustomersPage';
+import OrdersPage from '@/pages/OrdersPage';
+import { Outlet, createRootRoute, createRoute, createRouter, redirect } from '@tanstack/react-router';
 import LoginPage from './components/Login.tsx';
 import VerifyOtpPage from './components/VerifyOtp.tsx';
-
-// Router context type for Supabase session
-type RouterContext = {
-  auth: {
-    session: Session | null;
-    loading: boolean;
-  };
-};
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -22,10 +15,30 @@ const rootRoute = createRootRoute({
   ),
 });
 
-const dashboardRoute = createRoute({
+const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
-  component: DashboardPage,
+  beforeLoad: () => {
+    throw redirect({ to: '/dashboard' });
+  },
+});
+
+const dashboardRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/dashboard',
+  component: BusinessDashboard,
+});
+
+const ordersRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/orders',
+  component: OrdersPage,
+});
+
+const customersRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/customers',
+  component: CustomersPage,
 });
 
 const componentsRoute = createRoute({
@@ -46,7 +59,15 @@ const verifyOtpRoute = createRoute({
   component: VerifyOtpPage,
 });
 
-const routeTree = rootRoute.addChildren([dashboardRoute, componentsRoute, loginRoute, verifyOtpRoute]);
+const routeTree = rootRoute.addChildren([
+  indexRoute,
+  dashboardRoute,
+  ordersRoute,
+  customersRoute,
+  componentsRoute,
+  loginRoute,
+  verifyOtpRoute,
+]);
 
 const router = createRouter({
   routeTree,

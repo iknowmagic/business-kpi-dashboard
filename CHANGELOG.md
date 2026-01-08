@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-01-07
+- Added Business KPI Dashboard as a portfolio piece
+  - Created mock data generator with deterministic seeding (500 orders over 90 days)
+  - Implemented dashboard components: KPI cards, revenue/category/traffic charts, orders table
+  - Added dashboard state management with Jotai atoms (filters, drilldown, search, sorting)
+  - Created 3 routes: /dashboard (main), /orders (full table), /customers (derived data)
+  - Added interactive features: chart drilldown, CSV export, global filters
+  - Implemented UX states: loading skeletons, empty state, error state (simulated)
+  - Added responsive layout with sidebar navigation and mobile support
+  - Updated routes to redirect / to /dashboard
+  - Added Recharts dependency for data visualization
+  - Created shadcn/ui table component
+  - Updated README.md and APP_FILE_INDEX.md with dashboard documentation
+
 ## 2026-01-06
 - Added GENERAL_GUIDELINES.md as the reusable playbook for setup, workflow, testing, and theming.
 - Rewrote README.md to describe the starter stack and demo pages.

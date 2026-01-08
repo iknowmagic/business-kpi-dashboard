@@ -6,8 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useDevTools } from '@/store/devTools/hooks';
 import type { DevToolsTab } from '@/store/devTools/atoms';
+import { useDevTools } from '@/store/devTools/hooks';
 import { Wrench } from 'lucide-react';
 import { useEffect } from 'react';
 
@@ -49,7 +49,7 @@ export function NoctareDevTools() {
         >
           <span className="relative flex items-center gap-2">
             <Wrench className="h-4 w-4" />
-            <span>Noctare Dev Tools</span>
+            <span>MetricHub Dev Tools</span>
             {unreadCount > 0 ? (
               <span className="bg-destructive absolute -top-3 -right-3 inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-[0.65rem] font-semibold text-white">
                 {unreadCount}
@@ -61,7 +61,7 @@ export function NoctareDevTools() {
       <SheetContent side="right" className="flex h-full w-full flex-col overflow-hidden p-0 sm:max-w-[440px]">
         <div className="shrink-0 border-b px-6 py-4">
           <SheetHeader className="space-y-1">
-            <SheetTitle>Noctare Dev Tools</SheetTitle>
+            <SheetTitle>MetricHub Dev Tools</SheetTitle>
             <SheetDescription>Developer-only controls. Changes persist to Supabase.</SheetDescription>
           </SheetHeader>
         </div>

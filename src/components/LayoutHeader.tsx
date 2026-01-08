@@ -12,7 +12,7 @@ export function LayoutHeader({ children }: LayoutHeaderProps) {
     <header className="border-light-header-border bg-light-header-bg text-foreground dark:border-dark-header-border dark:bg-dark-header-bg dark:text-foreground flex h-16 items-center justify-between overflow-auto border-b px-4">
       <div className="flex items-center gap-3">
         <Button variant="ghost" size="icon" className="dark:text-foreground h-9 w-9 rounded-lg" aria-label="App icon">
-          <img src={noctareLogo} alt="Noctare" className="h-6 w-6 object-contain dark:invert" />
+          <img src={noctareLogo} alt="MetricHub" className="h-6 w-6 object-contain dark:invert" />
         </Button>
         <div className="text-foreground dark:text-foreground text-lg font-semibold">{children}</div>
       </div>

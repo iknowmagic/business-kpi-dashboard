@@ -4,11 +4,54 @@ This starter keeps the tree intentionally small, so we do not maintain a line-by
 
 Key entry points today:
 - src/main.tsx — app bootstrap
-- src/routes.tsx — route definitions for Dashboard and Components Showcase
-- src/pages/ — demo pages
-- src/components/ — shared UI (modals, auth, layout helpers)
-- src/lib/ — Supabase client, query setup, and utilities
+- src/routes.tsx — route definitions (Business Dashboard, Orders, Customers, Components Showcase)
+- src/pages/ — page components
+- src/components/ — shared UI (modals, auth, layout helpers, dashboard components)
+- src/lib/ — utilities, mock data generator, Supabase client
 - src/store/ — Jotai atoms/hooks
+
+## Business KPI Dashboard (Portfolio Project)
+
+### src/pages/BusinessDashboard.tsx
+Main business dashboard page with KPI cards, charts, and orders table.
+
+### src/pages/OrdersPage.tsx
+Full-page orders table view with filters and drilldown support.
+
+### src/pages/CustomersPage.tsx
+Full-page customers table view derived from order data.
+
+### src/components/dashboard/
+Dashboard-specific components:
+
+- **AppSidebar.tsx** - Left sidebar navigation for dashboard routes
+- **DashboardHeader.tsx** - Top header with title, filters, and export button
+- **DashboardContent.tsx** - Main dashboard content with KPIs, charts, and table
+- **DashboardFilters.tsx** - Global filter controls (date range, segment, region)
+- **KPICard.tsx** - KPI display card with value, change indicator, and trend
+- **RevenueChart.tsx** - Line chart showing revenue over time with drilldown
+- **CategoryChart.tsx** - Bar chart showing orders by category with drilldown
+- **TrafficChart.tsx** - Pie chart showing traffic source distribution
+- **OrdersTable.tsx** - Orders data table with search, sorting, and pagination
+- **DrilldownIndicator.tsx** - Shows active drilldown filters with clear action
+- **EmptyState.tsx** - Displayed when filters produce no results
+- **ErrorState.tsx** - Error state component for simulated errors
+
+### src/lib/mockData.ts
+Deterministic mock data generator for 500 orders with seeded randomization. Provides:
+- Order generation with realistic customer names, dates, categories, regions
+- Dashboard data aggregation (KPIs, charts, filtered orders)
+- CSV export functionality
+- Filter application logic
+
+### src/store/dashboard/atoms.ts
+Jotai atoms for dashboard state management:
+- Filter atoms (dateRange, segment, region)
+- Drilldown state (day/category filtering)
+- Table state (search, sorting, pagination)
+- Loading and error simulation states
+
+### Original Project Files
 
 ### src/lib/recurrenceTransforms.ts
 Handles transformations between UI recurrence state and database recurrence formats.
