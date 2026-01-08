@@ -38,7 +38,8 @@ export function RevenueChart({ data, isLoading }: RevenueChartProps) {
       <ResponsiveContainer width="100%" height={300}>
         <LineChart
           data={data}
-          onClick={(e: unknown) => e?.activePayload?.[0] && handleClick(e.activePayload[0].payload)}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          onClick={(e: any) => e?.activePayload?.[0] && handleClick(e.activePayload[0].payload)}
         >
           <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
           <XAxis

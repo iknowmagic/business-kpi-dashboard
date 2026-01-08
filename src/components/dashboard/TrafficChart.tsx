@@ -41,9 +41,8 @@ export function TrafficChart({ data, isLoading }: TrafficChartProps) {
             cx="50%"
             cy="50%"
             outerRadius={100}
-            label={(entry: unknown) =>
-              `${(entry as Record<string, unknown>).source}: ${(entry as Record<string, unknown>).value}`
-            }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            label={(entry: any) => `${entry.source}: ${entry.value}`}
           >
             {data.map((entry) => (
               <Cell key={entry.source} fill={COLORS[entry.source]} />
