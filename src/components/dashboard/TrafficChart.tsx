@@ -35,13 +35,15 @@ export function TrafficChart({ data, isLoading }: TrafficChartProps) {
       <ResponsiveContainer width="100%" height={300}>
         <PieChart>
           <Pie
-            data={data}
+            data={data as unknown as Record<string, unknown>[]}
             dataKey="value"
             nameKey="source"
             cx="50%"
             cy="50%"
             outerRadius={100}
-            label={(entry) => `${entry.source}: ${entry.value}`}
+            label={(entry: unknown) =>
+              `${(entry as Record<string, unknown>).source}: ${(entry as Record<string, unknown>).value}`
+            }
           >
             {data.map((entry) => (
               <Cell key={entry.source} fill={COLORS[entry.source]} />

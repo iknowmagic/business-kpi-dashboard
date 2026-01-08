@@ -36,7 +36,10 @@ export function CategoryChart({ data, isLoading }: CategoryChartProps) {
     <div className="bg-card rounded-lg border p-6" data-testid="category-chart">
       <h3 className="mb-4 text-lg font-semibold">Orders by Category</h3>
       <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={data} onClick={(e) => e?.activePayload?.[0] && handleClick(e.activePayload[0].payload)}>
+        <BarChart
+          data={data}
+          onClick={(e: unknown) => e?.activePayload?.[0] && handleClick(e.activePayload[0].payload)}
+        >
           <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
           <XAxis dataKey="category" className="text-xs" />
           <YAxis className="text-xs" />

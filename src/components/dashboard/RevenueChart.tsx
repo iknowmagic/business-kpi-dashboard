@@ -36,7 +36,10 @@ export function RevenueChart({ data, isLoading }: RevenueChartProps) {
     <div className="bg-card rounded-lg border p-6" data-testid="revenue-chart">
       <h3 className="mb-4 text-lg font-semibold">Revenue Over Time</h3>
       <ResponsiveContainer width="100%" height={300}>
-        <LineChart data={data} onClick={(e) => e?.activePayload?.[0] && handleClick(e.activePayload[0].payload)}>
+        <LineChart
+          data={data}
+          onClick={(e: unknown) => e?.activePayload?.[0] && handleClick(e.activePayload[0].payload)}
+        >
           <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
           <XAxis
             dataKey="date"
@@ -45,7 +48,7 @@ export function RevenueChart({ data, isLoading }: RevenueChartProps) {
           />
           <YAxis tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`} className="text-xs" />
           <Tooltip
-            formatter={(value: number) => [`$${value.toFixed(2)}`, 'Revenue']}
+            formatter={(value: number | undefined) => [`$${(value || 0).toFixed(2)}`, 'Revenue']}
             labelFormatter={(label) => new Date(label).toLocaleDateString()}
           />
           <Line
