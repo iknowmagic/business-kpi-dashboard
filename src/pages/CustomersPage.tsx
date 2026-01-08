@@ -107,10 +107,7 @@ export default function CustomersPage() {
   }, [customersData, searchQuery, sortField, sortDirection]);
 
   const totalPages = Math.ceil(filteredAndSorted.length / ITEMS_PER_PAGE);
-  const paginatedCustomers = filteredAndSorted.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
+  const paginatedCustomers = filteredAndSorted.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   // Reset to page 1 when search changes
   useEffect(() => {
@@ -151,7 +148,7 @@ export default function CustomersPage() {
                   <TableHeader>
                     <TableRow>
                       <TableHead
-                        className="cursor-pointer select-none hover:bg-muted/50"
+                        className="hover:bg-muted/50 cursor-pointer select-none"
                         onClick={() => handleSort('name')}
                       >
                         <div className="flex items-center gap-1">
@@ -165,7 +162,7 @@ export default function CustomersPage() {
                         </div>
                       </TableHead>
                       <TableHead
-                        className="cursor-pointer select-none hover:bg-muted/50"
+                        className="hover:bg-muted/50 cursor-pointer select-none"
                         onClick={() => handleSort('totalOrders')}
                       >
                         <div className="flex items-center gap-1">
@@ -179,7 +176,7 @@ export default function CustomersPage() {
                         </div>
                       </TableHead>
                       <TableHead
-                        className="cursor-pointer select-none hover:bg-muted/50"
+                        className="hover:bg-muted/50 cursor-pointer select-none"
                         onClick={() => handleSort('totalSpent')}
                       >
                         <div className="flex items-center gap-1">
@@ -194,7 +191,7 @@ export default function CustomersPage() {
                       </TableHead>
                       <TableHead>Type</TableHead>
                       <TableHead
-                        className="cursor-pointer select-none hover:bg-muted/50"
+                        className="hover:bg-muted/50 cursor-pointer select-none"
                         onClick={() => handleSort('region')}
                       >
                         <div className="flex items-center gap-1">
@@ -245,7 +242,7 @@ export default function CustomersPage() {
 
               {/* Pagination */}
               <div className="mt-4 flex items-center justify-between border-t pt-4">
-                <div className="text-sm text-muted-foreground">
+                <div className="text-muted-foreground text-sm">
                   Showing {filteredAndSorted.length === 0 ? 0 : (currentPage - 1) * ITEMS_PER_PAGE + 1} to{' '}
                   {Math.min(currentPage * ITEMS_PER_PAGE, filteredAndSorted.length)} of {filteredAndSorted.length}{' '}
                   customers
@@ -259,7 +256,7 @@ export default function CustomersPage() {
                   >
                     Previous
                   </Button>
-                  <div className="text-sm text-muted-foreground">
+                  <div className="text-muted-foreground text-sm">
                     Page {currentPage} of {totalPages || 1}
                   </div>
                   <Button
