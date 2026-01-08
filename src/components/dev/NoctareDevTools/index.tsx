@@ -58,7 +58,7 @@ export function NoctareDevTools() {
           </span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="flex h-full w-full flex-col overflow-hidden p-0 sm:max-w-[440px]">
+      <SheetContent side="right" className="flex h-full w-full flex-col overflow-hidden p-0 sm:max-w-110">
         <div className="shrink-0 border-b px-6 py-4">
           <SheetHeader className="space-y-1">
             <SheetTitle>MetricHub Dev Tools</SheetTitle>

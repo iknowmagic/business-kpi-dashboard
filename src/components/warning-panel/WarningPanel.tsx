@@ -165,10 +165,10 @@ export function WarningPanel({ tasks, onRefresh }: WarningPanelProps) {
   return (
     <>
       <Sheet open={isOpen} onOpenChange={setOpen}>
-        <SheetContent side="right" className="flex flex-col gap-0 p-0 sm:w-[420px]">
+        <SheetContent side="right" className="flex flex-col gap-0 p-0 sm:w-105">
           <SheetHeader className="border-b px-6 py-4 text-left">
             <SheetTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-light-warning-red-500 dark:text-dark-warning-red-500" />
+              <AlertTriangle className="text-light-warning-red-500 dark:text-dark-warning-red-500 h-5 w-5" />
               Tasks Need Attention
             </SheetTitle>
             <SheetDescription>Review overdue or unschedulable tasks and resolve them quickly.</SheetDescription>
