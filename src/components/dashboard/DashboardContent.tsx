@@ -11,33 +11,23 @@ import { KPICard } from '@/components/dashboard/KPICard';
 import { OrdersTable } from '@/components/dashboard/OrdersTable';
 import { RevenueChart } from '@/components/dashboard/RevenueChart';
 import { TrafficChart } from '@/components/dashboard/TrafficChart';
-import type { DashboardData } from '@/lib/mockData';
-import { getDashboardData } from '@/lib/mockData';
+import { dashboardQueryOptions } from '@/lib/dashboardApi';
 import { drilldownAtom, filtersAtom, simulateErrorAtom } from '@/store/dashboard/atoms';
+import { useQuery } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 export function DashboardContent() {
   const filters = useAtomValue(filtersAtom);
   const drilldown = useAtomValue(drilldownAtom);
   const simulateError = useAtomValue(simulateErrorAtom);
 
-  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
-  const [isDataLoading, setIsDataLoading] = useState(false);
-
-  // Fetch data when filters change
-  useEffect(() => {
-    setIsDataLoading(true);
-
-    // Simulate async loading
-    const timer = setTimeout(() => {
-      const data = getDashboardData(filters);
-      setDashboardData(data);
-      setIsDataLoading(false);
-    }, 600);
-
-    return () => clearTimeout(timer);
-  }, [filters]);
+  // Fetch data from API using TanStack Query
+  const {
+    data: dashboardData,
+    isLoading: isDataLoading,
+    error,
+  } = useQuery(dashboardQueryOptions(filters));
 
   // Apply drilldown filtering
   const filteredOrders = useMemo(() => {
@@ -54,8 +44,8 @@ export function DashboardContent() {
     return orders;
   }, [dashboardData, drilldown]);
 
-  if (simulateError) {
-    return <ErrorState />;
+  if (simulateError || error) {
+    return <ErrorState message={error instanceof Error ? error.message : undefined} />;
   }
 
   const showEmpty = !isDataLoading && dashboardData && dashboardData.orders.length === 0;
