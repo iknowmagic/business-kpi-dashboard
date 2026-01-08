@@ -40,7 +40,13 @@ export default function OrdersPage() {
         <DashboardHeader title="Orders" orders={filteredOrders} showFilters={true} showExport={true} />
         <main className="flex-1 space-y-4 overflow-auto p-4 md:space-y-6 md:p-6">
           <DrilldownIndicator />
-          {filteredOrders.length === 0 ? <EmptyState /> : <OrdersTable orders={filteredOrders} isLoading={isLoading} />}
+          {isLoading ? (
+            <OrdersTable orders={[]} isLoading={true} />
+          ) : filteredOrders.length === 0 ? (
+            <EmptyState />
+          ) : (
+            <OrdersTable orders={filteredOrders} isLoading={false} />
+          )}
         </main>
       </div>
     </div>

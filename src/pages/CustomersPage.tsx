@@ -8,6 +8,7 @@ import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 import { EmptyState } from '@/components/dashboard/EmptyState';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { dashboardQueryOptions } from '@/lib/dashboardApi';
 import { filtersAtom } from '@/store/dashboard/atoms';
@@ -28,7 +29,7 @@ export default function CustomersPage() {
   const filters = useAtomValue(filtersAtom);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const { data } = useQuery(dashboardQueryOptions(filters));
+  const { data, isLoading } = useQuery(dashboardQueryOptions(filters));
 
   const customersData = useMemo(() => {
     const orders = data?.orders ?? [];
@@ -67,7 +68,12 @@ export default function CustomersPage() {
       <div className="flex flex-1 flex-col">
         <DashboardHeader title="Customers" showFilters={true} showExport={false} />
         <main className="flex-1 overflow-auto p-4 md:p-6">
-          {customersData.length === 0 ? (
+          {isLoading ? (
+            <div className="bg-card rounded-lg border p-4 md:p-6" data-testid="customers-table-skeleton">
+              <Skeleton className="mb-4 h-6 w-40" />
+              <Skeleton className="h-48 w-full" />
+            </div>
+          ) : customersData.length === 0 ? (
             <EmptyState />
           ) : (
             <div className="bg-card rounded-lg border p-4 md:p-6" data-testid="customers-table">
