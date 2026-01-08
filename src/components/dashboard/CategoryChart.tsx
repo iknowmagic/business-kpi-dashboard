@@ -13,7 +13,7 @@ import { Skeleton } from '../ui/skeleton';
 // Pastel colors for each category
 const CATEGORY_COLORS = {
   Subscriptions: 'hsl(200, 70%, 70%)',
-  Services: 'hsl(280, 65%, 75%)',
+  Services: 'hsl(260, 50%, 75%)',
   'Add-ons': 'hsl(150, 60%, 65%)',
   Other: 'hsl(30, 80%, 70%)',
 };

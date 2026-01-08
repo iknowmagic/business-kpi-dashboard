@@ -35,8 +35,8 @@ export function RevenueChart({ data, isLoading }: RevenueChartProps) {
     }
   };
 
-  // Pastel line color and white dots in dark mode
-  const lineColor = 'hsl(260, 60%, 70%)';
+  // Pastel line color (matching CategoryChart blue) and white dots in dark mode
+  const lineColor = 'hsl(200, 70%, 70%)';
   const dotColor = isDark ? '#ffffff' : lineColor;
 
   return (

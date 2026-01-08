@@ -17,7 +17,7 @@ interface TrafficChartProps {
 const COLORS = {
   Organic: 'hsl(150, 60%, 65%)',
   Paid: 'hsl(210, 70%, 70%)',
-  Referral: 'hsl(280, 65%, 75%)',
+  Referral: 'hsl(260, 50%, 75%)',
   Email: 'hsl(30, 80%, 70%)',
 };
 
