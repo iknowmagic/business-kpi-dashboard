@@ -49,6 +49,7 @@ export function CategoryChart({ data, isLoading }: CategoryChartProps) {
       <ResponsiveContainer width="100%" height={300}>
         <BarChart
           data={data}
+          margin={{ bottom: 40 }}
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           onClick={(e: any) => e?.activePayload?.[0] && handleClick(e.activePayload[0].payload)}
         >
@@ -56,6 +57,9 @@ export function CategoryChart({ data, isLoading }: CategoryChartProps) {
           <XAxis
             dataKey="category"
             tick={{ fill: isDark ? 'hsl(215, 20%, 65%)' : 'hsl(215, 20%, 45%)' }}
+            angle={-45}
+            textAnchor="end"
+            height={80}
             className="text-xs"
           />
           <YAxis tick={{ fill: isDark ? 'hsl(215, 20%, 65%)' : 'hsl(215, 20%, 45%)' }} className="text-xs" />
@@ -64,6 +68,11 @@ export function CategoryChart({ data, isLoading }: CategoryChartProps) {
               backgroundColor: isDark ? 'hsl(222, 47%, 11%)' : 'hsl(0, 0%, 100%)',
               border: `1px solid ${isDark ? 'hsl(215, 20%, 25%)' : 'hsl(215, 20%, 85%)'}`,
               borderRadius: '8px',
+            }}
+            labelStyle={{
+              color: isDark ? 'hsl(213, 31%, 91%)' : 'hsl(222, 47%, 11%)',
+            }}
+            itemStyle={{
               color: isDark ? 'hsl(213, 31%, 91%)' : 'hsl(222, 47%, 11%)',
             }}
           />
