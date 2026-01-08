@@ -25,13 +25,24 @@ export function KPICard({ title, value, change, format, isLoading }: KPICardProp
     );
   }
 
+  // Format large numbers with K/M notation
+  const formatNumber = (num: number): string => {
+    if (num >= 1000000) {
+      return (num / 1000000).toFixed(1) + 'M';
+    }
+    if (num >= 1000) {
+      return (num / 1000).toFixed(1) + 'K';
+    }
+    return num.toFixed(0);
+  };
+
   const formattedValue =
     format === 'currency'
-      ? `$${typeof value === 'number' ? value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : value}`
+      ? `$${typeof value === 'number' ? formatNumber(value) : value}`
       : format === 'percentage'
         ? `${typeof value === 'number' ? value.toFixed(1) : value}%`
         : typeof value === 'number'
-          ? value.toLocaleString()
+          ? formatNumber(value)
           : value;
 
   const isPositive = change >= 0;
@@ -41,7 +52,7 @@ export function KPICard({ title, value, change, format, isLoading }: KPICardProp
   return (
     <div className="bg-card @container rounded-lg border p-6" data-testid="kpi-card">
       <h3 className="text-muted-foreground mb-2 text-sm font-medium">{title}</h3>
-      <div className="@kpi1:text-3xl mb-1 text-2xl font-bold" data-testid="kpi-value">
+      <div className="mb-1 text-[clamp(1.5rem,3vw,2rem)] leading-tight font-bold" data-testid="kpi-value">
         {formattedValue}
       </div>
       <div

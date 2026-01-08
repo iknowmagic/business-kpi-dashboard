@@ -47,7 +47,11 @@ export function TrafficChart({ data, isLoading }: TrafficChartProps) {
             cy="50%"
             outerRadius={100}
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            label={(entry: any) => `${entry.source}: ${entry.value}`}
+            label={(entry: any) => {
+              const total = data.reduce((sum, item) => sum + item.value, 0);
+              const percentage = total > 0 ? ((entry.value / total) * 100).toFixed(0) : 0;
+              return `${entry.source}: ${percentage}%`;
+            }}
           >
             {data.map((entry) => (
               <Cell key={entry.source} fill={COLORS[entry.source]} />
@@ -59,6 +63,11 @@ export function TrafficChart({ data, isLoading }: TrafficChartProps) {
               border: `1px solid ${isDark ? 'hsl(215, 20%, 25%)' : 'hsl(215, 20%, 85%)'}`,
               borderRadius: '8px',
               color: isDark ? 'hsl(213, 31%, 91%)' : 'hsl(222, 47%, 11%)',
+            }}
+            formatter={(value: number) => {
+              const total = data.reduce((sum, item) => sum + item.value, 0);
+              const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+              return [`${value} orders (${percentage}%)`, ''];
             }}
           />
         </PieChart>

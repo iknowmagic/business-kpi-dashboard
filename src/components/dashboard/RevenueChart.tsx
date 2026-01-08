@@ -61,7 +61,12 @@ export function RevenueChart({ data, isLoading }: RevenueChartProps) {
             className="text-xs"
           />
           <Tooltip
-            formatter={(value: number | undefined) => [`$${(value || 0).toFixed(2)}`, 'Revenue']}
+            formatter={(value: number | undefined) => {
+              const val = value || 0;
+              if (val >= 1000000) return [`$${(val / 1000000).toFixed(2)}M`, 'Revenue'];
+              if (val >= 1000) return [`$${(val / 1000).toFixed(1)}K`, 'Revenue'];
+              return [`$${val.toFixed(0)}`, 'Revenue'];
+            }}
             labelFormatter={(label) => new Date(label).toLocaleDateString()}
             contentStyle={{
               backgroundColor: isDark ? 'hsl(222, 47%, 11%)' : 'hsl(0, 0%, 100%)',

@@ -182,7 +182,8 @@ const generateOrders = (): Order[] => {
   const regions: Region[] = ['NA', 'EU', 'APAC'];
   const sources: TrafficSource[] = ['Organic', 'Paid', 'Referral', 'Email'];
 
-  for (let i = 0; i < 500; i++) {
+  // Generate 2000 orders over 90 days for more realistic mid-size company volume
+  for (let i = 0; i < 2000; i++) {
     const daysAgo = rng.nextInt(0, 89);
     const date = new Date(now.getTime() - daysAgo * dayMs);
 
@@ -195,7 +196,8 @@ const generateOrders = (): Order[] => {
       date,
       status: rng.pick(statuses),
       category: rng.pick(categories),
-      total: rng.nextFloat(9.99, 999.99),
+      // Realistic B2B/SaaS pricing: $800-$4500 per order
+      total: rng.nextFloat(800, 4500),
       region: rng.pick(regions),
       trafficSource: rng.pick(sources),
       isReturningCustomer: rng.next() > 0.6,
@@ -305,9 +307,12 @@ const getOrdersByCategory = (orders: Order[]): CategoryDataPoint[] => {
 const getTrafficSources = (orders: Order[]): TrafficSourceDataPoint[] => {
   const sources = new Map<TrafficSource, number>();
 
-  orders.forEach((order) => {
-    sources.set(order.trafficSource, (sources.get(order.trafficSource) || 0) + 1);
-  });
+  // Only count paid orders to match the KPI metrics
+  orders
+    .filter((o) => o.status === 'Paid')
+    .forEach((order) => {
+      sources.set(order.trafficSource, (sources.get(order.trafficSource) || 0) + 1);
+    });
 
   return Array.from(sources.entries()).map(([source, value]) => ({ source, value }));
 };
